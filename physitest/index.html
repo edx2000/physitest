@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr" prefix="og: https://ogp.me/ns#">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ═══ SEO primaire ═══════════════════════════════════════ -->
+  <title>PhysiTest — Simulateurs de physique lycée interactifs</title>
+  <meta name="description" content="Simulateurs de physique interactifs gratuits pour le lycée : pendule, chute libre, oscillateur masse-ressort, tir parabolique. 2nde, 1ère, Terminale.">
+  <meta name="keywords" content="physique lycée, simulateur physique, pendule simple, chute libre, oscillateur ressort, tir parabolique, 2nde, terminale, révision physique, animation physique, mécanique lycée">
+  <meta name="author" content="PhysiTest">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://physitest.netlify.app/">
+
+  <!-- ═══ Open Graph (Facebook, LinkedIn, WhatsApp…) ════════ -->
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://physitest.netlify.app/">
+  <meta property="og:title"       content="PhysiTest — Simulateurs de physique lycée">
+  <meta property="og:description" content="Pendule, chute libre, ressort, projectile : simule, ajuste les paramètres et comprends la physique en direct. Gratuit, sans inscription.">
+  <meta property="og:image"       content="https://physitest.netlify.app/assets/logo.png">
+  <meta property="og:locale"      content="fr_FR">
+  <meta property="og:site_name"   content="PhysiTest">
+
+  <!-- ═══ Twitter Card ══════════════════════════════════════ -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="PhysiTest — Simulateurs de physique lycée">
+  <meta name="twitter:description" content="Simule et comprends la physique en direct. Pendule, chute libre, ressort, projectile.">
+  <meta name="twitter:image"       content="https://physitest.netlify.app/assets/logo.png">
+
+  <!-- ═══ Favicons & app icons ══════════════════════════════ -->
+  <link rel="icon"             type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="icon"             type="image/png" sizes="16x16" href="assets/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180"               href="assets/apple-touch-icon.png">
+  <link rel="manifest"                                        href="site.webmanifest">
+  <meta name="theme-color" content="#05a1f0">
+  <meta name="msapplication-TileColor" content="#06080f">
+
+  <!-- ═══ Données structurées JSON-LD ═══════════════════════ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "PhysiTest",
+    "url": "https://physitest.netlify.app/",
+    "description": "Simulateurs de physique interactifs gratuits pour le lycée (2nde, 1ère, Terminale).",
+    "inLanguage": "fr",
+    "author": {
+      "@type": "Organization",
+      "name": "PhysiTest"
+    },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://physitest.netlify.app/#sim/{search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  <!-- ═══ Polices ══════════════════════════════════════════ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- ═══ Styles ════════════════════════════════════════════ -->
+  <link rel="stylesheet" href="src/styles/tokens.css">
+  <link rel="stylesheet" href="src/styles/base.css">
+  <link rel="stylesheet" href="src/styles/layout.css">
+  <link rel="stylesheet" href="src/styles/components.css">
+</head>
+<body>
+
+<!-- Bandeau mobile non intrusif (hors du grid) -->
+<div id="desktop-hint" role="note">
+  <span>💡 Pour une meilleure expérience, essaie ce site sur un ordinateur.</span>
+  <button id="desktop-hint-close" aria-label="Fermer"
+    onclick="this.parentElement.style.display='none'; localStorage.setItem('pt_hint_dismissed','1')">×</button>
+</div>
+
+<div id="app">
+
+  <header id="header">
+    <!-- Logo image + texte -->
+    <a class="logo" href="#home" aria-label="PhysiTest — Accueil">
+      <img src="assets/logo.png" alt="PhysiTest logo" class="logo-img" width="178" height="80">
+    </a>
+    <span class="header-tagline">Lycée · 2nde → Terminale</span>
+    <div id="header-home-actions">
+      <span style="font-size:0.78rem; color:var(--text-muted)">4 simulations disponibles</span>
+    </div>
+  </header>
+
+  <nav id="sidebar" aria-label="Navigation principale"></nav>
+
+  <!-- Navigation mobile horizontale (remplie par JS) -->
+  <nav id="mobile-nav" aria-label="Navigation mobile"></nav>
+
+  <main id="main" role="main">
+    <div class="view active" data-route="home"></div>
+    <div class="view" data-route="sim"></div>
+  </main>
+
+  <!-- Colonne publicitaire — remplacer les .ad-slot par les blocs AdSense -->
+  <aside id="ad-column" aria-label="Publicités">
+    <div class="ad-slot">
+      <div class="ad-slot-label">Publicité</div>
+      <!-- Insérer bloc AdSense 160×250 ici -->
+      <span>AdSense 160×250</span>
+    </div>
+    <div class="ad-slot">
+      <div class="ad-slot-label">Publicité</div>
+      <!-- Insérer bloc AdSense 160×600 ici -->
+      <span>AdSense 160×600</span>
+    </div>
+  </aside>
+
+</div>
+
+<!-- ═══ Footer ════════════════════════════════════════════════ -->
+<footer id="site-footer" role="contentinfo">
+  <div class="footer-inner">
+
+    <div class="footer-brand">
+      <img src="assets/logo.png" alt="PhysiTest" class="footer-logo">
+      <p class="footer-tagline">Simulateurs de physique interactifs<br>pour le lycée — gratuit, sans inscription.</p>
+    </div>
+
+    <div class="footer-links">
+      <div class="footer-col">
+        <h3>Simulations</h3>
+        <ul>
+          <li><a href="#sim/pendule">Pendule simple</a></li>
+          <li><a href="#sim/chute">Chute libre</a></li>
+          <li><a href="#sim/ressort">Oscillateur masse-ressort</a></li>
+          <li><a href="#sim/projectile">Tir parabolique</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Niveaux</h3>
+        <ul>
+          <li><span>Seconde</span></li>
+          <li><span>Première</span></li>
+          <li><span>Terminale</span></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="compteur/">Statistiques</a></li>
+          <li><a href="#home">Accueil</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <span>© <span id="footer-year"></span> PhysiTest — Tous droits réservés</span>
+    <span class="footer-sep">·</span>
+    <span>Outil pédagogique gratuit</span>
+    <span class="footer-sep">·</span>
+    <span>Physique · Lycée · France</span>
+  </div>
+</footer>
+
+<!-- Tooltip global -->
+<div id="tooltip" role="tooltip" aria-hidden="true"></div>
+
+<script>
+// Cache le bandeau mobile si déjà fermé
+(function() {
+  if (localStorage.getItem('pt_hint_dismissed') === '1') {
+    document.getElementById('desktop-hint').style.display = 'none';
+  }
+  // Année footer
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
+})();
+</script>
+
+<script src="src/components/router.js"></script>
+<script src="src/components/ui.js"></script>
+<script src="src/components/simrunner.js"></script>
+<script src="src/simulations/pendule.js"></script>
+<script src="src/simulations/chute.js"></script>
+<script src="src/simulations/ressort.js"></script>
+<script src="src/simulations/projectile.js"></script>
+<script src="src/app.js"></script>
+
+<!-- Tracking des visites -->
+<script>
+(function() {
+  const KEY = 'physitest_visits';
+  function weekKey(date) {
+    const d = new Date(date); d.setHours(0,0,0,0);
+    d.setDate(d.getDate() + 3 - ((d.getDay() + 6) % 7));
+    const w1 = new Date(d.getFullYear(), 0, 4);
+    const wn = 1 + Math.round(((d - w1) / 86400000 - 3 + ((w1.getDay() + 6) % 7)) / 7);
+    return d.getFullYear() + '-W' + String(wn).padStart(2, '0');
+  }
+  function dayKey(date) {
+    const d = new Date(date);
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+  try {
+    const now = new Date();
+    let data = JSON.parse(localStorage.getItem(KEY) || 'null') ||
+      { total: 0, firstVisit: now.toISOString(), byDay: {}, byWeek: {} };
+    data.total = (data.total || 0) + 1;
+    const dk = dayKey(now); data.byDay[dk] = (data.byDay[dk] || 0) + 1;
+    const wk = weekKey(now); data.byWeek[wk] = (data.byWeek[wk] || 0) + 1;
+    localStorage.setItem(KEY, JSON.stringify(data));
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>
