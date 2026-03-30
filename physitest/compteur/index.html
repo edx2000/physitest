@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhysiTest — Statistiques</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#06080f; --surface:#0d1220; --raised:#131a2e;
+      --border:rgba(5,161,240,0.08); --border-m:rgba(5,161,240,0.18);
+      --text:#e8f4ff; --muted:#7aa8cc; --faint:#3d6080;
+      --accent:#05a1f0; --green:#2dd4a0; --amber:#f0a830; --red:#e05c7a;
+      --font:'DM Sans',system-ui,sans-serif;
+      --mono:'JetBrains Mono',monospace;
+      --display:'Syne',system-ui,sans-serif;
+    }
+    body { background:var(--bg); color:var(--text); font-family:var(--font); min-height:100vh; -webkit-font-smoothing:antialiased; }
+
+    header { display:flex; align-items:center; gap:16px; padding:0 32px; height:64px; background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
+    .logo-img { height:42px; width:auto; display:block; }
+    .header-sub { font-size:0.78rem; color:var(--faint); }
+    .back-btn { margin-left:auto; padding:7px 16px; border:1px solid var(--border-m); border-radius:6px; background:transparent; color:var(--muted); font-size:0.82rem; cursor:pointer; text-decoration:none; transition:all 0.12s; font-family:var(--font); }
+    .back-btn:hover { color:var(--text); border-color:var(--accent); }
+
+    main { max-width:960px; margin:0 auto; padding:40px 24px 80px; }
+    h1 { font-family:var(--display); font-size:1.8rem; margin-bottom:6px; }
+    .page-sub { color:var(--muted); font-size:0.88rem; margin-bottom:36px; line-height:1.6; }
+
+    .no-data { text-align:center; padding:64px 24px; background:var(--surface); border:1px solid var(--border); border-radius:16px; margin-bottom:24px; }
+    .no-data .icon { font-size:2.5rem; margin-bottom:16px; }
+    .no-data h2 { font-family:var(--display); margin-bottom:8px; }
+    .no-data p { color:var(--muted); font-size:0.88rem; line-height:1.6; }
+    .no-data a { color:var(--accent); }
+
+    .counter-hero { display:grid; grid-template-columns:auto 1px 1fr; align-items:center; gap:32px; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px 36px; margin-bottom:20px; }
+    .counter-number { font-family:var(--mono); font-size:4.5rem; font-weight:500; color:var(--accent); line-height:1; letter-spacing:-3px; }
+    .counter-divider { width:1px; height:60px; background:var(--border-m); }
+    .counter-label { font-size:1rem; font-weight:500; color:var(--muted); margin-bottom:8px; }
+    .counter-since { font-size:0.8rem; color:var(--faint); margin-bottom:12px; }
+    .counter-today { display:flex; align-items:baseline; gap:8px; }
+    .counter-today-val { font-family:var(--mono); font-size:1.8rem; font-weight:500; color:var(--green); }
+    .counter-today-label { font-size:0.82rem; color:var(--muted); }
+
+    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-bottom:20px; }
+    .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px 20px; transition:border-color 0.12s; }
+    .stat-card:hover { border-color:var(--border-m); }
+    .stat-card.hl { border-color:rgba(5,161,240,0.25); }
+    .stat-card.hl .stat-val { color:var(--accent); }
+    .stat-label { font-size:0.68rem; color:var(--faint); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; }
+    .stat-val { font-family:var(--mono); font-size:2rem; font-weight:500; color:var(--text); line-height:1; margin-bottom:4px; }
+    .stat-unit { font-size:0.7rem; color:var(--faint); font-family:var(--mono); }
+
+    .chart-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:20px; }
+    .chart-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:10px; }
+    .chart-title { font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; }
+    .chart-legend { display:flex; gap:14px; font-size:0.73rem; color:var(--faint); }
+    .ldot { width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:4px; vertical-align:middle; }
+    .chart-wrap { position:relative; width:100%; height:220px; }
+    canvas#chart { position:absolute; inset:0; width:100% !important; height:100% !important; }
+
+    .daily-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:20px; }
+    .daily-title { font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:16px; }
+    .daily-row { display:grid; grid-template-columns:120px 1fr 36px; align-items:center; gap:12px; padding:9px 0; border-bottom:1px solid var(--border); }
+    .daily-row:last-child { border-bottom:none; }
+    .daily-date { color:var(--muted); font-size:0.8rem; }
+    .daily-bar-wrap { height:6px; background:var(--raised); border-radius:99px; overflow:hidden; }
+    .daily-bar { height:100%; border-radius:99px; background:var(--accent); opacity:0.55; transition:width 0.4s; }
+    .daily-count { font-family:var(--mono); font-size:0.82rem; color:var(--text); text-align:right; }
+
+    .actions { display:flex; gap:10px; flex-wrap:wrap; }
+    .btn { padding:9px 20px; border-radius:8px; border:1px solid var(--border-m); background:var(--raised); color:var(--muted); font-size:0.85rem; cursor:pointer; transition:all 0.12s; font-family:var(--font); }
+    .btn:hover { color:var(--text); border-color:var(--accent); }
+    .btn-danger { color:var(--red); }
+    .btn-danger:hover { border-color:var(--red); background:rgba(224,92,122,0.08); }
+
+    .overlay { display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.75); align-items:center; justify-content:center; }
+    .overlay.show { display:flex; }
+    .confirm-box { background:var(--raised); border:1px solid var(--border-m); border-radius:14px; padding:32px; max-width:360px; width:90%; text-align:center; }
+    .confirm-box h3 { font-family:var(--display); font-size:1.2rem; margin-bottom:10px; }
+    .confirm-box p { color:var(--muted); font-size:0.88rem; margin-bottom:24px; line-height:1.55; }
+    .confirm-btns { display:flex; gap:10px; justify-content:center; }
+    .btn-yes { background:rgba(224,92,122,0.12); border-color:var(--red); color:var(--red); }
+    .btn-yes:hover { background:rgba(224,92,122,0.22); }
+
+    @media(max-width:600px) {
+      header { padding:0 16px; }
+      main { padding:24px 16px 60px; }
+      .counter-hero { grid-template-columns:1fr; gap:16px; padding:24px; }
+      .counter-divider { display:none; }
+      .counter-number { font-size:3rem; }
+      .daily-row { grid-template-columns:90px 1fr 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="../index.html"><img src="../assets/logo.png" alt="PhysiTest" class="logo-img"></a>
+  <span class="header-sub">Statistiques</span>
+  <a class="back-btn" href="../index.html">← Retour au site</a>
+</header>
+
+<main>
+  <h1>Statistiques de visites</h1>
+  <p class="page-sub">Données enregistrées localement à chaque ouverture du site principal.<br>Propres à ce navigateur — aucun serveur impliqué.</p>
+
+  <div id="no-data" class="no-data" style="display:none">
+    <div class="icon">📊</div>
+    <h2>Aucune donnée disponible</h2>
+    <p>Les statistiques apparaîtront dès que le site aura été visité.<br><br>
+    <a href="../index.html">Visiter le site →</a> puis reviens ici.</p>
+  </div>
+
+  <div id="dashboard" style="display:none">
+    <div class="counter-hero">
+      <div class="counter-number" id="total-count">—</div>
+      <div class="counter-divider"></div>
+      <div>
+        <div class="counter-label">Visites enregistrées</div>
+        <div class="counter-since" id="since-date"></div>
+        <div class="counter-today">
+          <span class="counter-today-val" id="today-count">—</span>
+          <span class="counter-today-label">aujourd'hui</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card hl"><div class="stat-label">Cette semaine</div><div class="stat-val" id="stat-week">—</div><div class="stat-unit">visites</div></div>
+      <div class="stat-card"><div class="stat-label">Semaine précédente</div><div class="stat-val" id="stat-lastweek">—</div><div class="stat-unit">visites</div></div>
+      <div class="stat-card"><div class="stat-label">Moyenne / semaine</div><div class="stat-val" id="stat-avg">—</div><div class="stat-unit">visites / sem.</div></div>
+      <div class="stat-card"><div class="stat-label">Record semaine</div><div class="stat-val" id="stat-best">—</div><div class="stat-unit">visites</div></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">Visites par semaine — 12 dernières semaines</div>
+        <div class="chart-legend">
+          <span><span class="ldot" style="background:var(--accent)"></span>Semaine actuelle</span>
+          <span><span class="ldot" style="background:rgba(5,161,240,0.35)"></span>Passées</span>
+        </div>
+      </div>
+      <div class="chart-wrap"><canvas id="chart"></canvas></div>
+    </div>
+
+    <div class="daily-card">
+      <div class="daily-title">7 derniers jours</div>
+      <div id="daily-list"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn" onclick="exportData()">⬇ Exporter JSON</button>
+      <button class="btn btn-danger" onclick="document.getElementById('overlay').classList.add('show')">✕ Réinitialiser</button>
+    </div>
+  </div>
+</main>
+
+<div class="overlay" id="overlay">
+  <div class="confirm-box">
+    <h3>Réinitialiser ?</h3>
+    <p>Toutes les statistiques seront supprimées définitivement. Action irréversible.</p>
+    <div class="confirm-btns">
+      <button class="btn" onclick="document.getElementById('overlay').classList.remove('show')">Annuler</button>
+      <button class="btn btn-yes" onclick="resetData()">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+const KEY = 'physitest_visits';
+
+function isoDay(d) {
+  const dt = new Date(d);
+  return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
+}
+
+function isoWeek(d) {
+  const dt = new Date(d);
+  dt.setHours(0,0,0,0);
+  dt.setDate(dt.getDate()+3-((dt.getDay()+6)%7));
+  const jan4 = new Date(dt.getFullYear(),0,4);
+  const wn = 1+Math.round(((dt-jan4)/86400000-3+((jan4.getDay()+6)%7))/7);
+  return dt.getFullYear()+'-W'+String(wn).padStart(2,'0');
+}
+
+function offsetDate(base, days) {
+  const d = new Date(base);
+  d.setDate(d.getDate()+days);
+  return d;
+}
+
+function labelDay(isoStr) {
+  return new Date(isoStr).toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
+}
+
+function labelWeekStart(d) {
+  const dt = new Date(d);
+  const day = dt.getDay()||7;
+  dt.setDate(dt.getDate()-day+1);
+  return dt.toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+}
+
+function load() {
+  try { const r=localStorage.getItem(KEY); return r?JSON.parse(r):null; } catch{return null;}
+}
+
+function render() {
+  const data = load();
+  if (!data || !data.total) {
+    document.getElementById('no-data').style.display='';
+    document.getElementById('dashboard').style.display='none';
+    return;
+  }
+  document.getElementById('no-data').style.display='none';
+  document.getElementById('dashboard').style.display='';
+
+  const now=new Date(), today=isoDay(now), thisWk=isoWeek(now), lastWk=isoWeek(offsetDate(now,-7));
+  const byW=data.byWeek||{}, byD=data.byDay||{};
+  const allWkVals=Object.values(byW), wkCount=Math.max(1,Object.keys(byW).length);
+
+  document.getElementById('total-count').textContent=(data.total||0).toLocaleString('fr-FR');
+  document.getElementById('since-date').textContent=data.firstVisit
+    ?'Depuis le '+new Date(data.firstVisit).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'}):'';
+  document.getElementById('today-count').textContent=(byD[today]||0).toLocaleString('fr-FR');
+  document.getElementById('stat-week').textContent=(byW[thisWk]||0).toLocaleString('fr-FR');
+  document.getElementById('stat-lastweek').textContent=(byW[lastWk]||0).toLocaleString('fr-FR');
+  document.getElementById('stat-avg').textContent=Math.round(data.total/wkCount).toLocaleString('fr-FR');
+  document.getElementById('stat-best').textContent=(allWkVals.length?Math.max(...allWkVals):0).toLocaleString('fr-FR');
+
+  // Weekly chart data
+  const weeks=[];
+  for(let i=11;i>=0;i--){
+    const d=offsetDate(now,-i*7), k=isoWeek(d);
+    weeks.push({k,label:labelWeekStart(d),count:byW[k]||0,cur:k===thisWk});
+  }
+  drawChart(weeks);
+
+  // Daily list
+  const dl=document.getElementById('daily-list');
+  dl.innerHTML='';
+  const days=[];
+  for(let i=6;i>=0;i--) {
+    const d=offsetDate(now,-i), k=isoDay(d);
+    days.push({k,label:i===0?"Aujourd'hui":labelDay(k),count:byD[k]||0,today:i===0});
+  }
+  const maxD=Math.max(...days.map(d=>d.count),1);
+  days.forEach(day=>{
+    const row=document.createElement('div'); row.className='daily-row';
+    const lbl=document.createElement('div'); lbl.className='daily-date'; lbl.textContent=day.label;
+    if(day.today) lbl.style.color='var(--accent)';
+    const bw=document.createElement('div'); bw.className='daily-bar-wrap';
+    const b=document.createElement('div'); b.className='daily-bar';
+    b.style.width=(day.count/maxD*100)+'%';
+    if(day.today){b.style.opacity='1';}
+    bw.appendChild(b);
+    const c=document.createElement('div'); c.className='daily-count'; c.textContent=day.count;
+    if(day.today) c.style.color='var(--accent)';
+    row.appendChild(lbl); row.appendChild(bw); row.appendChild(c);
+    dl.appendChild(row);
+  });
+}
+
+function drawChart(weeks) {
+  const wrap=document.querySelector('.chart-wrap');
+  const canvas=document.getElementById('chart');
+  const W=wrap.clientWidth||800, H=wrap.clientHeight||220;
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+
+  const pad={t:16,b:54,l:38,r:14};
+  const gx=pad.l, gy=pad.t, gw=W-pad.l-pad.r, gh=H-pad.t-pad.b;
+  const maxV=Math.max(...weeks.map(w=>w.count),1);
+
+  // Grille
+  for(let i=0;i<=4;i++){
+    const y=gy+gh-(i/4)*gh;
+    ctx.strokeStyle='rgba(5,161,240,0.07)'; ctx.lineWidth=0.8;
+    ctx.beginPath(); ctx.moveTo(gx,y); ctx.lineTo(gx+gw,y); ctx.stroke();
+    ctx.fillStyle='#3d6080'; ctx.font='9px monospace'; ctx.textAlign='right';
+    ctx.fillText(Math.round(i/4*maxV), gx-4, y+3);
+  }
+
+  // Barres
+  const sw=gw/weeks.length, bw=Math.max(6,sw*0.55);
+  weeks.forEach((w,i)=>{
+    const x=gx+i*sw+(sw-bw)/2;
+    const bh=w.count/maxV*gh;
+    const y=gy+gh-bh;
+    ctx.fillStyle=w.cur?'#05a1f0':'rgba(5,161,240,0.28)';
+    rrect(ctx,x,y,bw,bh,Math.min(5,bw/2)); ctx.fill();
+    if(w.count>0){
+      ctx.fillStyle=w.cur?'#05a1f0':'#3d6080';
+      ctx.font=(w.cur?'bold ':'')+'9px monospace'; ctx.textAlign='center';
+      ctx.fillText(w.count, x+bw/2, y-5);
+    }
+    ctx.save();
+    ctx.translate(x+bw/2, gy+gh+10);
+    ctx.rotate(-Math.PI/4);
+    ctx.fillStyle=w.cur?'#e8f4ff':'#3d6080';
+    ctx.font=(w.cur?'bold ':'')+'9px monospace'; ctx.textAlign='right';
+    ctx.fillText(w.label,0,0);
+    ctx.restore();
+  });
+
+  // Axes
+  ctx.strokeStyle='rgba(5,161,240,0.12)'; ctx.lineWidth=0.8;
+  ctx.beginPath(); ctx.moveTo(gx,gy); ctx.lineTo(gx,gy+gh); ctx.lineTo(gx+gw,gy+gh); ctx.stroke();
+}
+
+function rrect(ctx,x,y,w,h,r){
+  if(h<=0)return; r=Math.min(r,h/2,w/2);
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+  ctx.arcTo(x+w,y,x+w,y+r,r); ctx.lineTo(x+w,y+h);
+  ctx.lineTo(x,y+h); ctx.lineTo(x,y+r);
+  ctx.arcTo(x,y,x+r,y,r); ctx.closePath();
+}
+
+function resetData(){
+  localStorage.removeItem(KEY);
+  document.getElementById('overlay').classList.remove('show');
+  render();
+}
+
+function exportData(){
+  const d=load()||{};
+  const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='physitest-stats-'+isoDay(new Date())+'.json';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+render();
+let rt;
+window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(render,150); });
+</script>
+</body>
+</html>
