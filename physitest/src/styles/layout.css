@@ -1,0 +1,427 @@
+/* ============================================================
+   PhysiTest — Layout
+   ============================================================ */
+
+:root {
+  --ad-width: 160px;
+}
+
+/* ── App shell ─────────────────────────────────────── */
+#app {
+  display: grid;
+  grid-template-rows: var(--header-height) 1fr;
+  grid-template-columns: var(--sidebar-width) 1fr var(--ad-width);
+  grid-template-areas:
+    "header header header"
+    "sidebar main ad";
+  min-height: 100vh;
+}
+
+/* ── Header ────────────────────────────────────────── */
+#header {
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: 0 var(--sp-5);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-dim);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.logo-img {
+  height: 52px;
+  width: auto;
+  display: block;
+}
+
+.header-tagline {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* ── Footer ─────────────────────────────────────────── */
+#site-footer {
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-dim);
+  padding: var(--sp-7) var(--sp-6) var(--sp-4);
+  margin-top: auto;
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  gap: var(--sp-7);
+  flex-wrap: wrap;
+  padding-bottom: var(--sp-6);
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.footer-brand {
+  flex: 0 0 200px;
+}
+.footer-logo {
+  height: 40px;
+  width: auto;
+  display: block;
+  margin-bottom: var(--sp-4);
+  border-radius: 6px;
+}
+.footer-tagline {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.footer-links {
+  flex: 1;
+  display: flex;
+  gap: var(--sp-7);
+  flex-wrap: wrap;
+}
+.footer-col h3 {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: var(--sp-3);
+}
+.footer-col ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.footer-col ul li a,
+.footer-col ul li span {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+.footer-col ul li a:hover { color: var(--accent); }
+
+.footer-bottom {
+  max-width: 1100px;
+  margin: var(--sp-4) auto 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.footer-sep { opacity: 0.4; }
+
+@media (max-width: 768px) {
+  #site-footer { padding: var(--sp-5) var(--sp-4) var(--sp-3); }
+  .footer-inner { flex-direction: column; gap: var(--sp-5); }
+  .footer-brand { flex: none; }
+  .footer-links { gap: var(--sp-5); }
+  .logo-img { height: 30px; }
+}
+
+#header-home-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-left: auto;
+}
+
+/* ── Sidebar ────────────────────────────────────────── */
+#sidebar {
+  grid-area: sidebar;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-dim);
+  overflow-y: auto;
+  padding: var(--sp-4) 0;
+  position: sticky;
+  top: var(--header-height);
+  height: calc(100vh - var(--header-height));
+}
+
+.sidebar-section { margin-bottom: var(--sp-4); }
+
+.sidebar-category {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-4);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: var(--sp-3);
+}
+.sidebar-category .cat-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 9px var(--sp-4);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  border-left: 2px solid transparent;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  background: none;
+  border-right: none; border-top: none; border-bottom: none;
+  width: 100%;
+  text-align: left;
+}
+.nav-item:hover { color: var(--text-primary); background: var(--bg-raised); }
+.nav-item.active { color: var(--accent); background: var(--accent-dim); border-left-color: var(--accent); }
+.nav-item .nav-badge {
+  margin-left: auto;
+  font-size: 0.68rem;
+  background: var(--bg-hover);
+  color: var(--text-muted);
+  padding: 1px 6px;
+  border-radius: 99px;
+  border: 1px solid var(--border-dim);
+}
+
+/* ── Main content ───────────────────────────────────── */
+#main {
+  grid-area: main;
+  overflow-y: auto;
+  padding: var(--sp-6);
+  background: var(--bg-base);
+  min-width: 0; /* prevent overflow */
+}
+
+/* ── Ad column ──────────────────────────────────────── */
+#ad-column {
+  grid-area: ad;
+  background: var(--bg-surface);
+  border-left: 1px solid var(--border-dim);
+  position: sticky;
+  top: var(--header-height);
+  height: calc(100vh - var(--header-height));
+  overflow-y: auto;
+  padding: var(--sp-4) var(--sp-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.ad-slot {
+  background: var(--bg-raised);
+  border: 1px dashed var(--border-med);
+  border-radius: var(--radius-md);
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--sp-3);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.ad-slot-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* ── Views ──────────────────────────────────────────── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 1100px) {
+  #app {
+    grid-template-columns: var(--sidebar-width) 1fr;
+    grid-template-areas: "header header" "sidebar main";
+  }
+  #ad-column { display: none; }
+}
+
+/* ── Mobile (≤ 768px) ───────────────────────────────── */
+@media (max-width: 768px) {
+  :root {
+    --header-height: 50px;
+  }
+
+  #app {
+    grid-template-columns: 1fr;
+    grid-template-rows: var(--header-height) auto 1fr;
+    grid-template-areas:
+      "header"
+      "mobile-nav"
+      "main";
+  }
+
+  #sidebar { display: none; }
+  #ad-column { display: none; }
+
+  #main {
+    padding: var(--sp-3);
+    /* Évite que le canvas déborde */
+    overflow-x: hidden;
+  }
+
+  /* Header mobile : logo + menu burger optionnel */
+  #header { padding: 0 var(--sp-4); }
+  .header-tagline { display: none; }
+
+  /* Navigation mobile horizontale sous le header */
+  #mobile-nav {
+    grid-area: mobile-nav;
+    display: flex;
+    /* Force display even if empty */
+    min-height: 42px;
+    overflow-x: auto;
+    gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-3);
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-dim);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  #mobile-nav::-webkit-scrollbar { display: none; }
+
+  .mobile-nav-item {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 99px;
+    border: 1px solid var(--border-dim);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+  .mobile-nav-item:hover { border-color: var(--border-med); color: var(--text-primary); }
+  .mobile-nav-item.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Canvas pleine largeur sur mobile */
+  .sim-canvas {
+    height: 260px !important;
+  }
+
+  /* Contrôles en colonne unique */
+  .controls-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Métriques 2 colonnes */
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Toolbar pendule en colonne */
+  .pendule-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-2);
+  }
+  .toolbar-speed { margin-left: 0; }
+
+  /* Header home actions : juste le bouton retour */
+  #header-home-actions .header-crumb { display: none; }
+
+  /* Titre sim plus petit */
+  .sim-title { font-size: 1.2rem; }
+  .home-hero h1 { font-size: 1.6rem; }
+  .sim-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Bannière desktop (visible seulement sur mobile) ─── */
+#desktop-hint {
+  display: none;
+}
+@media (max-width: 768px) {
+  #desktop-hint {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    background: rgba(91,138,245,0.06);
+    border-bottom: 1px solid rgba(91,138,245,0.15);
+    padding: 8px var(--sp-4);
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    /* En dehors du grid, avant le #app */
+    position: relative;
+    z-index: 50;
+  }
+  #desktop-hint-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    line-height: 1;
+  }
+  #desktop-hint-close:hover { color: var(--text-primary); }
+}
+
+/* ── Sidebar bottom (about + support) ───────────────── */
+.sidebar-bottom {
+  margin-top: auto;
+  padding: var(--sp-4) 0 var(--sp-3);
+  border-top: 1px solid var(--border-dim);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.nav-item-sm {
+  font-size: 0.8rem;
+  padding: 7px var(--sp-4);
+  color: var(--text-muted);
+}
+.nav-item-sm:hover { color: var(--text-secondary); }
+
+.sidebar-support-btn {
+  margin: 0 var(--sp-3);
+  padding: 9px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(5,161,240,0.25);
+  background: rgba(5,161,240,0.08);
+  color: var(--accent);
+  font-size: 0.83rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+  font-family: var(--font-body);
+}
+.sidebar-support-btn:hover {
+  background: rgba(5,161,240,0.16);
+  border-color: var(--accent);
+}
+
+/* Sidebar flex column pour pousser bottom vers le bas */
+#sidebar {
+  display: flex;
+  flex-direction: column;
+}

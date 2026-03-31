@@ -1,0 +1,397 @@
+{
+  "site": {
+    "name": "PhysiTest",
+    "tagline": "Explore la physique autrement",
+    "description": "Simulateurs interactifs pour le lycée — 2nde à Terminale"
+  },
+  "categories": [
+    {
+      "id": "mecanique",
+      "label": "Mécanique",
+      "icon": "⚙"
+    },
+    {
+      "id": "optique",
+      "label": "Optique",
+      "icon": "🔭"
+    },
+    {
+      "id": "electricite",
+      "label": "Électricité",
+      "icon": "⚡"
+    },
+    {
+      "id": "thermodynamique",
+      "label": "Thermo",
+      "icon": "🌡"
+    }
+  ],
+  "simulations": [
+    {
+      "id": "pendule",
+      "category": "mecanique",
+      "title": "Pendule simple",
+      "subtitle": "Oscillations et énergie",
+      "levels": [
+        "2nde",
+        "1ère"
+      ],
+      "file": "pendule.js",
+      "formula": "T = 2π√(L/g)",
+      "explanation": {
+        "intro": "Un pendule simple est une masse suspendue à un fil inextensible de longueur L, qui oscille sous l'effet de la pesanteur.",
+        "points": [
+          "La période T ne dépend que de L et g — ni de la masse, ni de l'angle (pour θ₀ < 15°). C'est l'isochronisme du pendule.",
+          "L'énergie se convertit en permanence : potentielle Ep = mgh aux extrêmes, cinétique Ec = ½mv² au centre.",
+          "Sur la Lune (g = 1,62 m/s²), la période est ~2,5× plus longue qu'sur Terre.",
+          "La formule T = 2π√(L/g) permet de mesurer g expérimentalement avec grande précision."
+        ],
+        "warning": "L'approximation des petits angles n'est valable que pour θ₀ < 15°. Au-delà, la période réelle est légèrement supérieure."
+      },
+      "controls": [
+        {
+          "id": "L",
+          "label": "Longueur L",
+          "unit": "m",
+          "min": 0.2,
+          "max": 2,
+          "step": 0.05,
+          "default": 1
+        },
+        {
+          "id": "A0",
+          "label": "Angle θ₀",
+          "unit": "°",
+          "min": 5,
+          "max": 60,
+          "step": 1,
+          "default": 20
+        },
+        {
+          "id": "g",
+          "label": "Gravité g",
+          "unit": "m/s²",
+          "min": 1,
+          "max": 25,
+          "step": 0.01,
+          "default": 9.81,
+          "preset": true,
+          "presets": [
+            {
+              "label": "Terre",
+              "value": 9.81
+            },
+            {
+              "label": "Lune",
+              "value": 1.62
+            },
+            {
+              "label": "Mars",
+              "value": 3.72
+            },
+            {
+              "label": "Jupiter",
+              "value": 24.79
+            }
+          ]
+        }
+      ],
+      "metrics": [
+        {
+          "id": "T",
+          "label": "Période",
+          "unit": "s",
+          "decimals": 3
+        },
+        {
+          "id": "f",
+          "label": "Fréquence",
+          "unit": "Hz",
+          "decimals": 3
+        },
+        {
+          "id": "vmax",
+          "label": "Vitesse max",
+          "unit": "m/s",
+          "decimals": 3
+        },
+        {
+          "id": "E",
+          "label": "Énergie sp.",
+          "unit": "J·kg⁻¹",
+          "decimals": 3
+        },
+        {
+          "id": "amax",
+          "label": "Accél. max",
+          "unit": "m/s²",
+          "decimals": 3
+        }
+      ]
+    },
+    {
+      "id": "chute",
+      "category": "mecanique",
+      "title": "Chute libre",
+      "subtitle": "Mouvement uniformément accéléré",
+      "levels": [
+        "2nde",
+        "1ère"
+      ],
+      "file": "chute.js",
+      "formula": "y(t) = h + v₀·t − ½·g·t²   ·   v(t) = v₀ − g·t",
+      "explanation": {
+        "intro": "La chute libre est le mouvement d'un objet soumis uniquement à la pesanteur (sans frottements). L'accélération est constante et égale à g.",
+        "points": [
+          "La vitesse augmente linéairement : v(t) = v₀ − g·t. Sans vitesse initiale, l'objet gagne ~10 m/s toutes les secondes.",
+          "La position suit une loi quadratique y(t) = h + v₀t − ½gt² : la distance parcourue est proportionnelle au carré du temps.",
+          "Conservation de l'énergie : l'énergie potentielle E_p = mgy se transforme intégralement en énergie cinétique E_c = ½mv² à l'impact.",
+          "Tous les objets tombent à la même vitesse dans le vide quelle que soit leur masse : c'est le principe d'équivalence de Galilée (vérifié par la NASA sur la Lune).",
+          "Avec une vitesse initiale vers le haut (v₀ > 0), l'objet monte jusqu'à h_max = h + v₀²/(2g) avant de redescendre."
+        ],
+        "warning": "En réalité, les frottements de l'air ralentissent la chute. Ce simulateur modélise la chute idéale sans résistance de l'air."
+      },
+      "controls": [
+        {
+          "id": "h",
+          "label": "Hauteur initiale h",
+          "unit": "m",
+          "min": 1,
+          "max": 200,
+          "step": 1,
+          "default": 50
+        },
+        {
+          "id": "v0",
+          "label": "Vitesse initiale v₀",
+          "unit": "m/s",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "default": 0,
+          "tip": "v₀ positive = lancé vers le haut"
+        },
+        {
+          "id": "g",
+          "label": "Gravité g",
+          "unit": "m/s²",
+          "min": 0.1,
+          "max": 30,
+          "step": 0.01,
+          "default": 9.81,
+          "preset": true,
+          "presets": [
+            {
+              "label": "Terre",
+              "value": 9.81
+            },
+            {
+              "label": "Lune",
+              "value": 1.62
+            },
+            {
+              "label": "Mars",
+              "value": 3.72
+            },
+            {
+              "label": "Jupiter",
+              "value": 24.79
+            }
+          ]
+        }
+      ],
+      "metrics": [
+        {
+          "id": "tf",
+          "label": "Durée de chute",
+          "unit": "s",
+          "decimals": 3
+        },
+        {
+          "id": "vf",
+          "label": "Vitesse impact",
+          "unit": "m/s",
+          "decimals": 2
+        },
+        {
+          "id": "hmax",
+          "label": "Hauteur max",
+          "unit": "m",
+          "decimals": 2
+        },
+        {
+          "id": "ec",
+          "label": "Ec impact",
+          "unit": "J·kg⁻¹",
+          "decimals": 1
+        },
+        {
+          "id": "amax",
+          "label": "Accélération",
+          "unit": "m/s²",
+          "decimals": 2
+        },
+        {
+          "id": "tfree",
+          "label": "Chute depuis h (v₀=0)",
+          "unit": "s",
+          "decimals": 3
+        }
+      ]
+    },
+    {
+      "id": "ressort",
+      "category": "mecanique",
+      "title": "Oscillateur masse-ressort",
+      "subtitle": "Mouvement harmonique simple",
+      "levels": [
+        "1ère",
+        "Tale"
+      ],
+      "file": "ressort.js",
+      "formula": "x(t) = A·cos(ω₀t) avec ω₀ = √(k/m)",
+      "explanation": {
+        "intro": "Un ressort de raideur k relié à une masse m forme un oscillateur harmonique. Écarté de l'équilibre, le système oscille indéfiniment sans frottement.",
+        "points": [
+          "La pulsation propre ω₀ = √(k/m) : ressort plus raide ou masse plus faible → oscillations plus rapides.",
+          "La force de rappel est toujours dirigée vers l'équilibre : F = −kx (loi de Hooke).",
+          "L'énergie totale E = ½kA² est constante, partagée entre Ep = ½kx² et Ec = ½mv².",
+          "La période T = 2π√(m/k) est indépendante de l'amplitude — comme pour le pendule."
+        ],
+        "warning": "Modèle idéal sans frottement ni masse du ressort. En pratique, les oscillations s'amortissent progressivement."
+      },
+      "controls": [
+        {
+          "id": "k",
+          "label": "Raideur k",
+          "unit": "N/m",
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 20
+        },
+        {
+          "id": "m",
+          "label": "Masse m",
+          "unit": "kg",
+          "min": 0.1,
+          "max": 5,
+          "step": 0.1,
+          "default": 1
+        },
+        {
+          "id": "A",
+          "label": "Amplitude A",
+          "unit": "cm",
+          "min": 5,
+          "max": 80,
+          "step": 1,
+          "default": 40
+        }
+      ],
+      "metrics": [
+        {
+          "id": "T",
+          "label": "Période",
+          "unit": "s",
+          "decimals": 2
+        },
+        {
+          "id": "w",
+          "label": "Pulsation ω₀",
+          "unit": "rad/s",
+          "decimals": 2
+        },
+        {
+          "id": "F",
+          "label": "Force max",
+          "unit": "N",
+          "decimals": 1
+        },
+        {
+          "id": "Ep",
+          "label": "Ep élast. max",
+          "unit": "J",
+          "decimals": 2
+        }
+      ]
+    },
+    {
+      "id": "projectile",
+      "category": "mecanique",
+      "title": "Tir parabolique",
+      "subtitle": "Mouvement de projectile",
+      "levels": [
+        "1ère",
+        "Tale"
+      ],
+      "file": "projectile.js",
+      "formula": "x(t) = v₀cos(α)·t · y(t) = h₀ + v₀sin(α)·t − ½gt²",
+      "explanation": {
+        "intro": "Un projectile lancé à vitesse v₀ et angle α suit une trajectoire parabolique. Le mouvement se décompose en deux directions indépendantes.",
+        "points": [
+          "Horizontalement : mouvement uniforme. vₓ = v₀·cos(α) reste constant (aucune force horizontale).",
+          "Verticalement : chute libre. vy diminue sous g, s'annule au sommet, puis devient négative.",
+          "La portée maximale est atteinte pour α = 45°. Les angles complémentaires (ex. 30° et 60°) donnent la même portée.",
+          "Si on double v₀, la portée est multipliée par 4 : R ∝ v₀²."
+        ],
+        "warning": "Sans frottement, la trajectoire est une parabole parfaite. Avec résistance de l'air, la portée réelle est bien inférieure et l'angle optimal descend sous 45°."
+      },
+      "controls": [
+        {
+          "id": "v0",
+          "label": "Vitesse v₀",
+          "unit": "m/s",
+          "min": 5,
+          "max": 50,
+          "step": 1,
+          "default": 20
+        },
+        {
+          "id": "alpha",
+          "label": "Angle α",
+          "unit": "°",
+          "min": 5,
+          "max": 85,
+          "step": 1,
+          "default": 45
+        },
+        {
+          "id": "h0",
+          "label": "Hauteur h₀",
+          "unit": "m",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        }
+      ],
+      "metrics": [
+        {
+          "id": "R",
+          "label": "Portée max",
+          "unit": "m",
+          "decimals": 1
+        },
+        {
+          "id": "H",
+          "label": "Hauteur max",
+          "unit": "m",
+          "decimals": 1
+        },
+        {
+          "id": "tf",
+          "label": "Durée de vol",
+          "unit": "s",
+          "decimals": 2
+        },
+        {
+          "id": "vx",
+          "label": "vₓ (const.)",
+          "unit": "m/s",
+          "decimals": 1
+        }
+      ]
+    }
+  ]
+}
